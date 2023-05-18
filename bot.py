@@ -2,7 +2,7 @@ import lightbulb
 import string
 import requests
 from Func_auxiliares import *
-from banco_de_dados import DataBase
+from banco_postgres import DataBase
 
 bot = lightbulb.BotApp(token=open('tokens/tokens_bot.txt', 'r').read(),
 default_enabled_guilds = (int(open('tokens/ds_channel_id.txt', 'r').read())))
