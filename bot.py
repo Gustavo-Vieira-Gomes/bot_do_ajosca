@@ -38,7 +38,7 @@ async def clima(ctx):
 
 @bot.command
 @lightbulb.option('refeicao', 'Qual Refeição deseja', type=str)
-@lightbulb.command('pegar_quantitativo', 'Pega o Quantitativo da refeição desejada.')
+@lightbulb.command('pegar_quantitativo_rancho', 'Pega o Quantitativo da refeição desejada.')
 @lightbulb.implements(lightbulb.SlashCommand)
 
 async def pegar_quant(ctx: lightbulb.Context):
@@ -55,7 +55,7 @@ async def pegar_quant(ctx: lightbulb.Context):
 
 @bot.command
 @lightbulb.option('refeicao', 'Refeição')
-@lightbulb.command('pegar_nominal', 'Pega a Lista nominal da refeição')
+@lightbulb.command('pegar_previa_nominal', 'Pega a Lista nominal da refeição')
 @lightbulb.implements(lightbulb.SlashCommand)
 
 async def pegar_nom(ctx):
@@ -172,7 +172,7 @@ async def excluir_baixado(ctx):
 @lightbulb.option('quantitativo_3_ano', 'Quantitativo a bordo do 3º Ano')
 @lightbulb.option('quantitativo_2_ano', 'Quantitativo a bordo do 2º Ano')
 @lightbulb.option('quantitativo_1_ano', 'Quantitativo a bordo do 1º Ano')
-@lightbulb.command('atualizar_quantitativo', 'Atualiza o Quantitativo de alunos a bordo de cada ano')
+@lightbulb.command('atualizar_quantitativo_a_bordo', 'Atualiza o Quantitativo de alunos a bordo de cada ano')
 @lightbulb.implements(lightbulb.SlashCommand)
 async def atualizar_quantitativo(ctx):
     _3ano_abordo = ctx.options.quantitativo_3_ano
@@ -191,7 +191,7 @@ async def atualizar_quantitativo(ctx):
 
 
 @bot.command
-@lightbulb.command('mostrar_quantitativo', 'Apresenta o Quantitativo a bordo no Colégio')
+@lightbulb.command('mostrar_quantitativo_a_bordo', 'Apresenta o Quantitativo a bordo no Colégio')
 @lightbulb.implements(lightbulb.SlashCommand)
 async def listar_quantitativo(ctx):
     data = DataBase().Retirar_data('Quantitativo')

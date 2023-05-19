@@ -49,16 +49,16 @@ if __name__ == '__main__':
         data = datetime.datetime.today()
         if data.weekday() == 2 and data.hour == 12 and data.minute == 0:
             inicio_previa = data + datetime.timedelta(2)
-            fim_da_previa = data + datetime.timedelta(8)
+            fim_previa = data + datetime.timedelta(8)
             try:
-                gc.copy('14fcP-kflCXoj1UiPwPMb9NrmyRd-WbdfjMbtmMmI-nQ', f'Previa {inicio_previa.day:02d}/{inicio_previa.month:02d} a {fim_da_previa.day:02d}/{fim_da_previa.month:02d}') 
+                gc.copy('14fcP-kflCXoj1UiPwPMb9NrmyRd-WbdfjMbtmMmI-nQ', f'Previa {inicio_previa.day:02d}/{inicio_previa.month:02d} a {fim_previa.day:02d}/{fim_previa.month:02d}') 
             except:
                 pass
         if data.weekday() == 4 and data.hour == 12 and data.minute == 0:
             inicio_previa = data - datetime.timedelta(7)
-            fim_da_previa = data - datetime.timedelta(1)
+            fim_previa = data - datetime.timedelta(1)
             for spreadsheet in gc.list_spreadsheet_files():
-                if spreadsheet['name'] == f'Previa {inicio_previa.day:02d}/{inicio_previa.month:02d} a {fim_da_previa.day:02d}/{fim_da_previa.month:02d}':
+                if spreadsheet['name'] == f'Previa {inicio_previa.day:02d}/{inicio_previa.month:02d} a {fim_previa.day:02d}/{fim_previa.month:02d}':
                     id_ = spreadsheet['id']
             try:
                 gc.del_spreadsheet(id_)

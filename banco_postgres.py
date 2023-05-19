@@ -26,7 +26,8 @@ class DataBase():
             self.c.execute(f'''INSERT INTO baixados (Numero_Interno, Nome) VALUES (%s, %s)''',
                            (kwargs["Numero_Interno"], f"{kwargs['Nome']}"))
         else:
-            df = pd.DataFrame(self.c.execute('SELECT * FROM Quantitativo'))
+            sql = 'SELECT * FROM Quantitativo'
+            df = pd.read_sql(sql, self.conn)
             if len(df) != 0:
                 self.Delete_data('Quantitativo')
             for d in range(4, 0, -1):
@@ -36,23 +37,17 @@ class DataBase():
 
     def Delete_data(self, table, **kwargs):
         if table == 'lic':
-            df = pd.DataFrame(self.c.execute("SELECT * FROM lic_especial"))
+            sql = "SELECT * FROM lic_especial"
+            df = pd.read_sql(sql, self.conn)
             for line in df.index:
-                data_string = df.loc[line][2].split(' ')
-                date_limit = data_string[0].split('-')
-                if date_limit[1][0] == '0':
-                    date_limit[1] = date_limit[1].replace('0', '')
-                if date_limit[2][0] == '0':
-                    date_limit[2] = date_limit[2].replace('0', '')
-                hora_limit = data_string[1].split(':') 
-                day_limit = datetime.datetime(year=int(date_limit[0]), month=int(date_limit[1]), day=int(date_limit[2]), hour=int(hora_limit[0]), minute=int(hora_limit[1]))
+                day_limit = df.loc[line][2]
                 if day_limit < datetime.datetime.today():
-                    self.c.execute(f"DELETE FROM lic_especial WHERE Numero_Interno = %s", (df.loc[line][0]))
+                    self.c.execute(f"DELETE FROM lic_especial WHERE Numero_Interno = %s", (df.loc[line][0],))
         elif table == 'baixados':
-            self.c.execute(f'DELETE FROM baixados WHERE Numero_Interno = %s', (kwargs["Numero_Interno"]))
+            self.c.execute(f'DELETE FROM baixados WHERE Numero_Interno = %s', (kwargs["Numero_Interno"],))
         else:
             for i in range(0, 4):
-                self.c.execute(f'DELETE FROM Quantitativo WHERE  Ano_Escolar = "CA"') if i == 0 else self.c.execute(f'DELETE FROM Quantitativo WHERE  Ano_Escolar = %s', (f'{i} Ano'))
+                self.c.execute(f'DELETE FROM Quantitativo WHERE Ano_Escolar = %s', ('CA',)) if i == 0 else self.c.execute(f'DELETE FROM Quantitativo WHERE Ano_Escolar = %s', (f'{i} Ano',))
         self.conn.commit()
 
     def Excluir_Banco(self):
@@ -68,9 +63,7 @@ class DataBase():
             lic_list, disp_dom = '', ''
             for line in df.index:
                 pessoa = {'Numero_Interno': df.loc[line][0], 'Nome': df.loc[line][1], 'data_regresso': df.loc[line][2], 'motivo': df.loc[line][3]}
-                x =  pessoa['data_regresso'].split(' ')[0].split('-')
-                x.sort()
-                pessoa['data_regresso'] = f"{'/'.join(x)} às {pessoa['data_regresso'].split(' ')[1]}"
+                pessoa['data_regresso'] = f"{int(pessoa['data_regresso'].day):02d}/{int(pessoa['data_regresso'].month):02d} às {int(pessoa['data_regresso'].hour):02d}:{int(pessoa['data_regresso'].minute):02d}"
                 if pessoa['motivo'] == 'Dispensa Domiciliar':
                     disp_dom += f"{pessoa['Numero_Interno']} {pessoa['Nome']}  Regresso em -> {pessoa['data_regresso']}\n"
                 if pessoa['motivo'] == 'Licença Especial':
@@ -87,14 +80,14 @@ class DataBase():
         else:
             sql = 'SELECT * FROM Quantitativo'
             df = pd.read_sql(sql, self.conn)
-            df.set_index(0, inplace=True)
             quant_no_cn = ''
+            df.set_index('ano_escolar', inplace=True)
             for year in df.index:
-                quant_no_cn += f'{year:<5} ------ {df.loc[year][1]:<3} ------ {df.loc[year][2]:<3}\n'
+                quant_no_cn += f'{year:<5} ------ {df.loc[year][0]:<3} ------ {df.loc[year][1]:<3}\n'
             quant_no_cn = 'Segue o quantitativo a bordo do corpo de alunos e de cada ano:\n' + 'Turma ------ Total ------ A bordo\n' + f'{quant_no_cn}'
             return quant_no_cn
 
 
-if __name__ == '__main__':
-    while True:
-        DataBase().Delete_data('lic')
+#if __name__ == '__main__':
+#    while True:
+#        DataBase().Delete_data('lic')
