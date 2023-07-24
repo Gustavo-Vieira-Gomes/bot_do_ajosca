@@ -41,10 +41,8 @@ def dia_da_semana():
 
 
 
-
-gc = gspread.service_account(filename='C:\\Users\\gviei\\Projetos Python\\VsCodeProjects\\Meus Projetos\BotDs\\tokens\\credentials.json')
-
-if __name__ == '__main__':
+def copiar_previa():
+    gc = gspread.service_account(filename='C:\\Users\\gviei\\Projetos Python\\VsCodeProjects\\Meus Projetos\BotDs\\tokens\\credentials.json')
     while True:
         data = datetime.datetime.today()
         if data.weekday() == 2 and data.hour == 12 and data.minute == 0:
@@ -64,3 +62,4 @@ if __name__ == '__main__':
                 gc.del_spreadsheet(id_)
             except:
                 pass
+    

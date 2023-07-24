@@ -3,13 +3,16 @@ import string
 import requests
 from Func_auxiliares import *
 from banco_postgres import DataBase
+from threading import Thread
+from planilha import copiar_previa
 
 bot = lightbulb.BotApp(token=open('tokens/tokens_bot.txt', 'r').read(),
 default_enabled_guilds = (int(open('tokens/ds_channel_id.txt', 'r').read())))
 
-
-
-
+def atualizando_previa():
+    new_thread = Thread(target=copiar_previa)
+    new_thread.daemon = True
+    new_thread.start()
 
 #Mostrar Clima
 BASE_URL = "https://api.openweathermap.org/data/2.5/weather?"
